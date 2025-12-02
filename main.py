@@ -14,7 +14,7 @@ def load_kube_config():
     with open(k8s_ca_cert, "w") as f:
         f.write(os.environ.get("K8S_CA_CERT"))
 
-    configuraiton = client.Configuration()
+    configuration = client.Configuration()
     configuration.host = k8s_api_server
     configuration.verify_ssl = True
     configuration.ssl_ca_cert = k8s_ca_cert
