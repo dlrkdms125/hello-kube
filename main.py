@@ -18,7 +18,7 @@ def load_kube_config():
     configuration.host = k8s_api_server
     configuration.verify_ssl = True
     configuration.ssl_ca_cert = k8s_ca_cert
-    configuration.api_key = {"authorization": "Bearer "+odic_token}
+    configuration.api_key = {"authorization": "Bearer "+oidc_token}
 
     client.Configuration.set_default(configuration)
 
