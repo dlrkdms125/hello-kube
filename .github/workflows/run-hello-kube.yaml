@@ -1,0 +1,35 @@
+name: Run hello-kube
+
+on:
+  workflow_dispatch:   # 수동 실행
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write      # OIDC Token 발급 허용
+      contents: read
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install -r requirements.txt
+
+      - name: Acquire GitHub Actions OIDC token (for Kubernetes auth)
+        id: oidc
+        run: |
+          echo "token=${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" >> $GITHUB_OUTPUT
+
+      - name: Run hello-kube
+        env:
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ steps.oidc.outputs.token }}
+          K8S_API_SERVER: ${{ secrets.K8S_API_SERVER }}
+          K8S_CA_CERT: ${{ secrets.K8S_CA_CERT }}
+        run: |
+          python3 main.py
+
